@@ -13,7 +13,6 @@ class CharacterAgent(BaseAgent):
         
         # Get character profile
         character_profile = story_state.character_profiles.get(self.name)
-        
         # Build prompt
         prompt = get_character_prompt(
             character_name=self.name,

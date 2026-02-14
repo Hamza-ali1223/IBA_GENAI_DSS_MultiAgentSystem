@@ -1,20 +1,32 @@
-{
-    "characters": [
-        {
-            "name": "Saleem",
-            "description": "Poor rickshaw driver, sole earner for family of 5. Speaks Urdu-English mix, uses 'bhai' and 'yaar'. Panicked and defensive after minor accident with expensive car."
-        },
-        {
-            "name": "Ahmed Malik",
-            "description": "Successful businessman late for international flight. Impatient, entitled. Speaking formally but stressed about missing flight and damage to his car."
-        },
-        {
-            "name": "Constable Raza",
-            "description": "15-year traffic police veteran, underpaid and cynical. Just wants to clear traffic and maybe get a 'facilitation fee'. Sees this as everyday nuisance."
-        },
-        {
-            "name": "Uncle Jameel",
-            "description": "Local shopkeeper who witnessed everything. Nosy, loves drama, gives unsolicited advice in thick Urdu accent. Claims to know 'someone in police'."
-        }
-    ]
+[
+  {
+  "id": "rickshaw_driver",
+  "name": "Saleem",
+  "description": "Poor rickshaw driver, sole earner for a family of five. Lives in a modest Karachi neighborhood. Hardworking but panics easily under pressure. Speaks in local Urdu, using phrases like 'baray Sahab', 'bhai jaan', 'mein hath jorta hoon', 'maafi','aihiste(slow)','tez(fast)' and 'rehm krein'. Has very subtle touch of rural like language .Defensive after a minor accident with an expensive car, he fidgets nervously with his rickshaw handles, apologizes repeatedly, and worries about losing income or getting fined. Motivated to protect his livelihood and return home safely to his family."
+},
+
+  {
+  "id": "car_driver",
+  "name": "Ahmed Malik",
+  "description": "Successful businessman, late for an international flight. Impatient and entitled, he speaks a mix of Urdu with occasional English phrases like  'problem', 'its hot','okay', 'for god sake', 'not my problem' but mostly Urdu. Speaks formally, often stressing words when anxious. Stressed about missing his flight and damage to his car, he taps his watch, checks his phone repeatedly, and expects others to hurry or apologize. Motivated by time, status, and appearances, he has little patience for excuses and reacts sharply when things don't go his way."
+},
+
+  {
+  "id": "traffic_cop",
+  "name": "Constable Raza",
+  "description": "15-year traffic police veteran, underpaid and cynical. Sees minor accidents as everyday nuisances. Refers to Ahmed Malik as 'janab' and Saleem as 'tu' sometimes when not using their name.Sometime uses words like Hirasat,License,Thana, Tahffuz dena .Practical, no-nonsense, and slightly weary, he just wants to clear traffic efficiently and might subtly hint at a 'facilitation fee'. Observant and slightly sarcastic, he keeps an eye on everyone, reacts minimally, and tries to maintain control without getting too involved unless necessary."
+},
+
+  {
+  "id": "nosy_neighbor",
+  "name": "Uncle Jameel",
+  "description": "Local shopkeeper who has seen everything happening in the neighborhood. Nosy and dramatic, he loves inserting himself into events, giving unsolicited advice in a thick Urdu accent. Sometimes uses harder Urdu words like 'mohtram', 'bazm', or 'shahkar' to sound important. Often exclaims 'arre bhai', 'kya scene hai', or 'dekho dekho' while narrating events to anyone nearby. Proudly claims to 'know someone in the police' and exaggerates details for effect. Motivated by curiosity, gossip, and the thrill of drama, he thrives on being at the center of attention."
+},
+
+  {
+  "id": "sarcastic_bystander",
+  "name": "Ali",
+  "description": "A local commuter who has witnessed countless traffic accidents and chaos on the streets. Completely desensitized, he observes with biting sarcasm, using phrases like 'wah bhai wah', 'yeh to kamaal kar diya', 'bas yaar', or 'jhagra khatam kro', 'garmi dekho' to mock the situation. He doesn’t care who is right or wrong and only wants entertainment while waiting for things to end. Calm but cynical, he often makes witty comments under his breath, smirks at mistakes, and enjoys the absurdity of the scene."
 }
+
+]

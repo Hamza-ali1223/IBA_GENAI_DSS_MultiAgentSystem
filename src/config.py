@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 @dataclass
 class StoryConfig:
     """Configuration for the story simulation."""
@@ -17,6 +16,6 @@ class StoryConfig:
     
     max_consecutive_same_character: int = 2
     
-    num_characters: int = 4
+    num_characters: int = 5
     max_dialogue_length: int = 200
     

@@ -1,5 +1,4 @@
 from typing import List, Dict, Tuple, Optional
-from datetime import datetime
 from .schemas import StoryState, CharacterProfile, DialogueTurn
 from .config import StoryConfig
 
@@ -15,9 +14,11 @@ class StoryStateManager:
                 ) for char in characters
             }
         )
-    
+        # initialized private memory for each character name
+        self.character_memories = {char["name"]: [] for char in characters}
+
     def add_turn(self, speaker: str, dialogue: str, metadata: Dict = None) -> None:
-        """Add a dialogue turn and increment turn count."""
+        """Add a dialogue turn and record it in character memories."""
         turn = DialogueTurn(
             turn_number=self.state.current_turn + 1,
             speaker=speaker,
@@ -25,45 +26,44 @@ class StoryStateManager:
             metadata=metadata or {}
         )
         self.state.dialogue_history.append(turn)
+
+        # Log what happened for everyone
+        for char_name in self.character_memories:
+            self.character_memories[char_name].append(f"{speaker}: {dialogue}")
+
         self.state.current_turn += 1
-    
+
     def get_context_for_character(self, character_name: str) -> str:
-        """Return relevant context for a character, simulating memory."""
-        # Filter history where the character was either the speaker or present (for now assume all present)
-        # In a more complex system, we'd check if they were in the scene.
-        # For simplicity, we give them the last N turns, but we could filter for relevance.
-        
-        # Taking last 15 turns to give more context since we removed explicit memory
+        """Return context including private memories and physical action instructions."""
         recent_turns = self.state.dialogue_history[-15:]
-        
-        history_text = "\n".join([
-            f"{turn.speaker}: {turn.dialogue}"
-            for turn in recent_turns
-        ])
-        
+        history_text = "\n".join([f"{turn.speaker}: {turn.dialogue}" for turn in recent_turns])
+        memories = "\n".join(self.character_memories.get(character_name, [])[-10:]) # remember only 10 previos conversations
+
         return f"""
     Initial Event: {self.state.seed_story.get('description', 'Unknown event')}
+
+    PHYSICAL PRESENCE INSTRUCTIONS: 
+    Include non-verbal actions in square brackets, e.g., [ACTION: Wipes sweat from forehead].
+
+    Your Recent Memories:
+    {memories}
 
     Recent Dialogue:
     {history_text}
     """
-        
+
     def get_context_for_director(self) -> str:
         """Return full story context for director decisions."""
         history_text = "\n".join([
             f"[{turn.turn_number}] {turn.speaker}: {turn.dialogue}"
             for turn in self.state.dialogue_history
         ])
-        
         return f"""
     Story Title: {self.state.seed_story.get('title', 'Untitled')}
     Description: {self.state.seed_story.get('description', '')}
-
     Dialogue History:
     {history_text}
-
-    Director Notes:
-    {chr(10).join(self.state.director_notes)}
+    Director Notes: {chr(10).join(self.state.director_notes)}
 """
 
     def should_end_story(self) -> Tuple[bool, str]:
@@ -73,4 +73,3 @@ class StoryStateManager:
         if self.state.is_concluded:
             return True, self.state.conclusion_reason or "Director concluded story"
         return False, ""
-
