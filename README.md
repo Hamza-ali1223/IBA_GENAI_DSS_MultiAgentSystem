@@ -123,3 +123,16 @@ This file serves as a debug/audit log for the LLM interactions. It should track:
 - **Reasoning**: Participants can explore methods to enhance prompts so agents better reason through their decisions.
 
 You are expected to extend this codebase to include these features and other novel features.
+
+CHECKING
+graph TD
+    A([__start__]) --> B[Director: Scene Selection]
+    B --> C[Character: Roman Urdu Response & Action]
+    C --> D{Check Turn Limit / Resolution}
+    D -- Continue < 25 turns --> B
+    D -- Conclusion Reached --> E[Final Narrative Wrap-up]
+    E --> F([__end__])
+    
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#9f9,stroke:#333,stroke-width:2px
