@@ -1,125 +1,132 @@
-# GenAI_DSS: Multi-Agent Narrative System
+# Karachi Street Narrator
 
-## 1. Introduction
-This repository serves as the base implementation for the **Generative AI module of the Hackfest x Datathon**.
+**A Multi-Agent Narrative System for Hackfest x Datathon 2026**
 
-The challenge is to design a **Multi-Agent Narrative System** where autonomous agents navigate a world defined by a "Story Seed." Unlike traditional chatbots, these agents must possess:
-- A sense of physical presence.
-- Memory of past interactions.
-- The ability to execute non-verbal actions to resolve conflicts and achieve goals.
+*Team Hakuna Matata: Ali ur Rehman, Hamza Ali*
 
-This starter codebase provides a foundational structure using **LangGraph** to demonstrate agentic flow, character interaction, and director oversight.
+---
 
-## 2. Setup
+## Overview
 
-This project uses `uv` for dependency management.
+An autonomous narrative engine that transforms a seed story into a coherent 25-turn narrative. Characters interact with distinct personas, maintain memory of past interactions, and execute physical actions that change the story state. A Director orchestrates the flow while a reasoning layer decides between dialogue and action.
 
-### Prerequisites
-- Python 3.11+
-- `uv` package manager
+**Key Innovation:** Director narrates in English while characters speak in Roman Urdu, reflecting Karachi's multicultural street culture.
 
-### Installation
+---
 
-1.  **Fork the repository**:
-    - Go to the repository page on GitHub.
-    - Click the **Fork** button in the top-right corner to create your own copy.
-    - Clone *your forked repository*:
-      ```bash
-      git clone https://github.com/YOUR_USERNAME/GenAi_DSS.git
-      cd GenAi_DSS
-      ```
+## Quick Start
 
-2.  **Install dependencies**:
-    ```bash
-    uv sync
-    ```
-
-3.  **Environment Configuration**:
-    Create a `.env` file in the root directory and add your Google API Key:
-    ```ini
-    GOOGLE_API_KEY=your_api_key_here
-    ```
-
-## 3. System Guide
-
-The system is built on a modular architecture to simulate a narrative environment.
-
-### Core Components
-
-- **The Director (`DirectorAgent`)**:
-    - Acts as the central controller.
-    - Decides which character speaks next based on the narrative context.
-    - Monitors the story for conclusion conditions.
-    - Inject narrations to guide the plot.
-
-- **Character Agents (`CharacterAgent`)**:
-    - Distinct personas defined in `character_configs.json`.
-    - Generate dialogue based on their personality, the current story state, and the "Story Seed".
-    - Currently implemented as purely conversational agents.
-
-- **Story State Manager (`StoryStateManager`)**:
-    - Centralized state management for the simulation.
-    - Tracks the story progression, including dialogue history and director notes.
-    - Provides context-aware state views for both the Director and Character agents.
-    - Manages turn counting and checks for story conclusion conditions.
-
-- **Narrative Graph (`NarrativeGraph`)**:
-    - The state machine that orchestrates the flow of the simulation.
-    - Built using `LangGraph`.
-    - Manages the loop: `Director Selects` -> `Character Speaks` -> `Check Conclusion`.
-
-## 4. System Architecture
-
-The following diagram illustrates the current flow of the system:
-
-![Narrative Graph](narrative_graph.png)
-
-## 5. Usage
-
-> [!IMPORTANT]
-> **Mandatory Seed Story**: All participants **MUST** use the provided "Rickshaw Accident" seed story (`examples/rickshaw_accident/seed_story.json`) for their submission.
-
-To run the example scenario:
+**Prerequisites:** Python 3.11+ and `uv` package manager
 
 ```bash
+# Clone and setup
+git clone https://github.com/YOUR_USERNAME/GenAi_DSS.git
+cd GenAi_DSS
+uv sync
+
+# Configure API key
+echo "GOOGLE_API_KEY=your_api_key_here" > .env
+
+# Run simulation
 uv run src/main.py
 ```
 
-The system will:
-1. Load the seed story and characters.
-2. Initialize the agents.
-3. Run the dialogue loop for a maximum number of turns (default 25).
-4. Save the story transcript and logs.
+The system loads the rickshaw accident seed story, initializes agents, runs 25 dialogue turns, and saves outputs to `story_output.json` and `prompts_log.json`.
 
-### Output Files
+---
 
-Your system is required to generate the following output files (exact fields may vary, but core content should be similar):
+## Architecture
 
-**1. Narration Output (`story_output.json`)**
-This file records the final narrative trace of the simulation. It should contain:
-- **Metadata**: Title, seed story description.
-- **Events**: A chronological list of turns, including:
-    - `type`: "dialogue" or "narration".
-    - `speaker`: Who spoke (for dialogue).
-    - `content`: The actual text generated.
-    - `turn`: The turn number.
-- **Conclusion**: Why the story ended.
+![State Diagram](State%20Diagram%20V2.svg)
 
-**2. Prompts Log (`prompts_log.json`)**
-This file serves as a debug/audit log for the LLM interactions. It should track:
-- `timestamp`: When the request was made.
-- `agent`: Which agent (Director or Character) made the request.
-- `prompt`: The full text prompt sent to the LLM.
-- `response`: The raw response received from the model.
+```
+Narrative Loop: Director → Character → State Update → Check Conclusion → Repeat
+```
 
-## 6. Disclaimer: Bare Minimum Setup
+**Director Agent:** Orchestrates turn-taking, selects next speaker, monitors story objectives, and decides when actions are needed.
 
-> [!IMPORTANT]
-> **This is a starter kit.** It contains the essential structure but **LACKS** the advanced features required for the full competition challenge.
+**Character Agents:** Embody distinct personas, speak in Roman Urdu street slang, consult vector-based memory, and must include physical actions in every response.
 
-**Missing Features you are encouraged to explore:**
-- **Actions**: The current agents only talk. They cannot perform actions like `[ACTION: Picks up phone]`.
-- **Character Memory**: Individual character memory is missing.
-- **Reasoning**: Participants can explore methods to enhance prompts so agents better reason through their decisions.
+**Story State Manager:** Centralized hub tracking dialogue history, turn count, character inventories, environmental variables, and story metadata.
 
-You are expected to extend this codebase to include these features and other novel features.
+**Reasoning Layer:** Mediates between dialogue and action based on context, memory retrieval, and story pacing to prevent loops and maintain momentum.
+
+---
+
+## Action System
+
+Characters express physical presence through bracketed actions `[ACTION: ...]` that modify story state.
+
+**Five Mandatory Categories:**
+
+| Category | Examples |
+|----------|----------|
+| Movement | pacing, stepping, leaning |
+| Expression | glaring, sweating, smirking |
+| Interaction | pointing, touching, gesturing |
+| Sensory | hearing horns, feeling heat |
+| Conflict | blocking, reaching, pushing |
+
+Every character response must include at least one action to ensure embodied storytelling and prevent pure dialogue loops.
+
+---
+
+## Memory & Reasoning
+
+**Vector-Lite Memory:** Characters maintain individual memory stores. Before speaking, the system retrieves relevant past interactions using vector-based retrieval and injects them into the prompt context.
+
+```python
+self.character_memories = {char["name"]: [] for char in characters}
+```
+
+**Reasoning Layer:** Decides between dialogue and action by analyzing current state, memory context, and story pacing. Increases action probability when conflict stalls to maintain momentum.
+
+---
+
+## Output Files
+
+**`story_output.json`** - Complete narrative trace
+```
+├─ Metadata: title, seed description
+├─ Events: chronological list with type, speaker, content, turn
+└─ Conclusion: resolution reason
+```
+
+**`prompts_log.json`** - Full audit trail
+```
+├─ timestamp: request time
+├─ agent: Director or Character name
+├─ prompt: exact text sent to LLM
+└─ response: raw model output
+```
+
+---
+
+## Technical Solutions
+
+| Challenge | Solution |
+|-----------|----------|
+| Turn Limit Management | Centralized turn counter with iteration checks |
+| Character Voice Consistency | Prompt engineering for Roman Urdu and street slang |
+| Loop Prevention | Reasoning layer monitors repetition and triggers actions |
+| JSON Reliability | Rigorous validation before file writes |
+| Network Stability | Local prompt logging with checkpoint recovery |
+
+---
+
+## Key Features
+
+```
+✓ Director-Actor Architecture        ✓ Physical Action System (5 categories)
+✓ Bilingual Design (EN/Roman Urdu)   ✓ Turn-Limited Execution (25 max)
+✓ Vector-Lite Memory System          ✓ Complete Prompt Logging
+✓ Intelligent Reasoning Layer        ✓ State-Changing Actions
+```
+
+---
+
+## Conclusion
+
+Karachi Street Narrator demonstrates how structured multi-agent systems can generate rich, culturally authentic narratives within tight constraints. By combining a Director for orchestration, vector-based character memory, mandatory physical actions, and intelligent reasoning between dialogue and state changes, we achieve autonomous storytelling that is coherent, embodied, and true to Karachi's street culture.
+
+The architecture emphasizes separation of concerns: the Director orchestrates, characters inhabit their roles, and the state manager maintains coherence across 25 turns of dynamic narrative generation.
